@@ -17,7 +17,7 @@
   <com.example.speedinghurts.MyGLSurfaceView
       android:id="@+id/the_surface_view"
       android:layout_width="fill_parent"
-      android:layout_height="55mm" />
+      android:layout_height="50mm" />
   <LinearLayout
       android:orientation="horizontal"
       android:layout_width="fill_parent"

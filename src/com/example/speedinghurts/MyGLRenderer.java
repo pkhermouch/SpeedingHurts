@@ -43,7 +43,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // Car speed
     public volatile float carSpeed = 0.02f;
     // Constant to multiply speeds by in setSpeed()
-    public static final float speedScale = .001f;
+    public static final float speedScale = .0015f;
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -131,10 +131,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, mCarZOffsets[i]);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-            // Allow Z coordinates of [-2 * CARS_PER_LANE + 1, 1]
-            mCarZOffsets[i] = ((mCarZOffsets[i] + (2 * CARS_PER_LANE - 1) + carSpeed) %
+            // Allow Z coordinates of [-2 * CARS_PER_LANE + 2, 2]
+            mCarZOffsets[i] = ((mCarZOffsets[i] + (2 * CARS_PER_LANE - 2) + carSpeed) %
                                (2 * CARS_PER_LANE)) -
-                (2 * CARS_PER_LANE - 1);
+                (2 * CARS_PER_LANE - 2);
             mCarWheels[i].draw(mMVPMatrix);
             mCarBody[i].draw(mMVPMatrix);
         }
