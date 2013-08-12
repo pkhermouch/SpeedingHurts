@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Speeding Hurts</string>
+    <string name="speeding_20">Percent drivers >= 20 MPH</string>
+    <string name="speeding_30">Percent drivers >= 30 MPH</string>
+    <string name="speeding_40">Percent drivers >= 40 MPH</string>
+    <string name="killed_20">Percent killed at >= 20 MPH</string>
+    <string name="killed_30">Percent killed at >= 30 MPH</string>
+    <string name="killed_40">Percent killed at >= 40 MPH</string>
+</resources>
