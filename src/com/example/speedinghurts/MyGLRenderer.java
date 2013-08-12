@@ -17,10 +17,17 @@ import java.util.ArrayList;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
+    private final int NUM_CARS = 15;
+    private final int NUM_LANES = 3;
+    // Try to make sure this doesn't truncate a decimal ever
+    private final int CARS_PER_LANE = NUM_CARS / NUM_LANES;
+    
     private static final String TAG = "MyGLRenderer";
-    private CarBody[] mCarBody = new CarBody[6];
-    private CarWheels[] mCarWheels = new CarWheels[6];
-    private float[][] mCarTrans = new float[6][16];
+    private CarBody[] mCarBody = new CarBody[NUM_CARS];
+    private CarWheels[] mCarWheels = new CarWheels[NUM_CARS];
+    // X and Z offsets, to implement the "stream of traffic" effect
+    private float[] mCarXOffsets = new float[NUM_CARS];
+    private float[] mCarZOffsets = new float[NUM_CARS];
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjMatrix = new float[16];
@@ -54,7 +61,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glDepthFunc(GLES20.GL_LEQUAL);
         GLES20.glDepthMask(true);
 
-        for (int i = 0; i < mCarBody.length; i++) {
+        for (int i = 0; i < NUM_CARS; i++) {
             mCarBody[i] = new CarBody((float) Math.random(),
                                       (float) Math.random(),
                                       (float) Math.random());
@@ -62,23 +69,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
         
         // Create transformation matrices for each car
-        Matrix.setIdentityM(temp, 0);
-        mCarTrans[0] = temp.clone();
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 0f, 0f, -4f);
-        mCarTrans[1] = temp.clone();
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 0f, 0f, -2f);
-        mCarTrans[2] = temp.clone();
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 1f, 0f, 0f);
-        mCarTrans[3] = temp.clone();
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 1f, 0f, -4f);
-        mCarTrans[4] = temp.clone();
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 1f, 0f, -2f);
-        mCarTrans[5] = temp.clone();
+        for (int i = 0; i < NUM_CARS; i++) {
+            mCarXOffsets[i] = i % NUM_LANES;
+            mCarZOffsets[i] = (i / NUM_LANES) * 2;
+        }
+        
     }
 
     @Override
@@ -109,8 +104,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.rotateM(mMMatrix, 0, mAngleY, 0f, 1f, 0f);
         Matrix.rotateM(mMMatrix, 0, mAngleX, 1f, 0f, 0f);
         // Move cars along the z axis at a fixed rate
+        /*
         carPos = ((carPos + 2f + carSpeed) % 4) - 2;
         Matrix.translateM(mMMatrix, 0, 0f, 0f, carPos);
+        */
         /*
           cos 20 sin 35
           sin 20
@@ -129,9 +126,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //temp = mMVPMatrix.clone();
         //Matrix.multiplyMM(mMVPMatrix, 0, temp, 0, mMMatrix, 0);
 
-        for (int i = 0; i < mCarBody.length; i++) {
-            Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, mCarTrans[i], 0);
+        for (int i = 0; i < NUM_CARS; i++) {
+            Matrix.setIdentityM(temp, 0);
+            Matrix.translateM(temp, 0, mCarXOffsets[i], 0, mCarZOffsets[i]);
+            Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
+            // Allow Z coordinates of [-2 * CARS_PER_LANE + 1, 1]
+            mCarZOffsets[i] = ((mCarZOffsets[i] + (2 * CARS_PER_LANE - 1) + carSpeed) %
+                               (2 * CARS_PER_LANE)) -
+                (2 * CARS_PER_LANE - 1);
             mCarWheels[i].draw(mMVPMatrix);
             mCarBody[i].draw(mMVPMatrix);
         }
