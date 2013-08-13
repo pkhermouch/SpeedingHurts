@@ -3,8 +3,11 @@
 [*]Have multiple cars at once
 [*]Cars have different colors
 [*]Add user interface to change car speed
-[ ]Draw background + decide on perspective to view traffic from + turn off user input
+[*]Draw road
+[ ]Fix redraw issue when switching speeds
+[ ]Draw background, either with a texture or basic shapes
+[ ]Decide on traffic perspective and turn off user input
 [ ]Clean up / speed up code
 [*]Implement "stream of traffic" effect
 [ ]Add lighting?
-[ ]Wheels should rotate as car moves
+[ ]Wheels should rotate as car moves?
