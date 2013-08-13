@@ -87,15 +87,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
-        /*
-          float[] rm, int rmOffset,
-          Where the camera is
-          float eyeX, float eyeY, float eyeZ,
-          Where the camera is looking
-          float centerX, float centerY, float centerZ,
-          The up vector
-          float upX, float upY, float upZ
-        */
         Matrix.setLookAtM(mVMatrix, 0, 0, 0, 3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
@@ -106,28 +97,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.rotateM(mMMatrix, 0, 20, 1f, 0f, 0f);
         Matrix.rotateM(mMMatrix, 0, mAngleY, 0f, 1f, 0f);
         Matrix.rotateM(mMMatrix, 0, mAngleX, 1f, 0f, 0f);
-        // Move cars along the z axis at a fixed rate
-        /*
-        carPos = ((carPos + 2f + carSpeed) % 4) - 2;
-        Matrix.translateM(mMMatrix, 0, 0f, 0f, carPos);
-        */
-        /*
-          cos 20 sin 35
-          sin 20
-          cos 20 cos 35
-        */
-        /*
-        Matrix.translateM(mMMatrix, 0,
-                          carPos * (float) Math.cos(20 * (Math.PI / 180)) * (float) Math.sin(35 * (Math.PI / 180)),
-                          carPos * (float) Math.sin(20 * (Math.PI / 180)),
-                          carPos * (float) Math.cos(20 * (Math.PI / 180)) * (float) Math.cos(35 * (Math.PI / 180))
-                          );
-        */
+
         // Apply the model matrix
         float[] cmMVPMatrix = mMVPMatrix.clone();
         float[] cmMMatrix = mMMatrix.clone();
-        //temp = mMVPMatrix.clone();
-        //Matrix.multiplyMM(mMVPMatrix, 0, temp, 0, mMMatrix, 0);
 
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
@@ -167,14 +140,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         /*
-          float[] m, int offset,
-          Left / right clipping planes
-          float left, float right,
-          Bottom / top clipping planes
-          float bottom, float top,
           Near / far clipping planes, in terms of units away from the camera
           Cannot be negative or 0, should not be close to 0
-          float near, float far
         */
         //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
         Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 1, 21);
@@ -194,7 +161,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         return shader;
     }
 
-    /**
+    /*
      * Utility method for debugging OpenGL calls. Provide the name of the call
      * just after making it:
      *

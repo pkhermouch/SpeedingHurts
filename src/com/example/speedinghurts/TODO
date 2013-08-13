@@ -3,7 +3,8 @@
 [*]Have multiple cars at once
 [*]Cars have different colors
 [*]Add user interface to change car speed
-[ ]Draw background
-[ ]Implement "stream of traffic" effect
+[ ]Draw background + decide on perspective to view traffic from + turn off user input
+[ ]Clean up / speed up code
+[*]Implement "stream of traffic" effect
 [ ]Add lighting?
 [ ]Wheels should rotate as car moves
