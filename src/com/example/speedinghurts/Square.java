@@ -42,19 +42,23 @@ class Square {
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float squareCoords[] = { -0.5f,  0.5f, 0.0f,   // top left
-                                    -0.5f, -0.5f, 0.0f,   // bottom left
-                                     0.5f, -0.5f, 0.0f,   // bottom right
-                                     0.5f,  0.5f, 0.0f }; // top right
+    static float squareCoords[] = { -0.5f,  0.0f, -0.5f,   // top left
+                                    -0.5f, 0.0f, 0.5f,   // bottom left
+                                     0.5f, 0.0f, 0.5f,   // bottom right
+                                     0.5f,  0.0f, -0.5f }; // top right
 
     private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
     // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
+    float color[] = new float[4];
 
     public Square() {
+        color[0] = 1f;
+        color[1] = 1f;
+        color[2] = 1f;
+        color[3] = 1f;
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
         // (# of coordinate values * 4 bytes per float)
@@ -83,6 +87,15 @@ class Square {
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
+    }
+
+    public Square(float r, float g, float b) {
+
+        this();
+        color[0] = r;
+        color[1] = g;
+        color[2] = b;
+
     }
 
     public void draw(float[] mvpMatrix) {

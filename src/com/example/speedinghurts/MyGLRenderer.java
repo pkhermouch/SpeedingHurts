@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private final int NUM_CARS = 15;
+    private final int NUM_CARS = 21;
     private final int NUM_LANES = 3;
     // Try to make sure this doesn't truncate a decimal ever
     private final int CARS_PER_LANE = NUM_CARS / NUM_LANES;
@@ -28,6 +28,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // X and Z offsets, to implement the "stream of traffic" effect
     private float[] mCarXOffsets = new float[NUM_CARS];
     private float[] mCarZOffsets = new float[NUM_CARS];
+    private Square road;
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjMatrix = new float[16];
@@ -71,8 +72,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Create transformation matrices for each car
         for (int i = 0; i < NUM_CARS; i++) {
             mCarXOffsets[i] = i % NUM_LANES;
-            mCarZOffsets[i] = (i / NUM_LANES) * 2;
+            mCarZOffsets[i] = (i / NUM_LANES) * -2;
         }
+
+        road = new Square(0.9f, 0.9f, 0.9f);
         
     }
 
@@ -139,6 +142,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             mCarBody[i].draw(mMVPMatrix);
         }
 
+        Matrix.setIdentityM(temp, 0);
+        Matrix.translateM(temp, 0, 0f, -0.2f, 0f);
+        //Matrix.rotateM(temp, 0, 20f, 0f, 0f, 1f);
+        //Matrix.scaleM(temp, 0, 3, 10, 1);
+        Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
+        road.draw(mMVPMatrix);
+        
         // Create a rotation for the triangle
         //long time = SystemClock.uptimeMillis() % 4000L;
         //float angle = 0.090f * ((int) time);
