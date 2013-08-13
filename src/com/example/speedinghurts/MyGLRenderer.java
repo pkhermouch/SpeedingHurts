@@ -12,6 +12,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
+import android.os.SystemClock;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final int NUM_LANES = 3;
     // Try to make sure this doesn't truncate a decimal ever
     private final int CARS_PER_LANE = NUM_CARS / NUM_LANES;
-    
+
+    public static final String vertexShaderCode =
+        // This matrix member variable provides a hook to manipulate
+        // the coordinates of the objects that use this vertex shader
+        "uniform mat4 uMVPMatrix;" +
+
+        "attribute vec4 vPosition;" +
+        "void main() {" +
+        // the matrix must be included as a modifier of gl_Position
+        "  gl_Position = uMVPMatrix * vPosition;" +
+        "}";
+    public static final String fragmentShaderCode =
+        "precision mediump float;" +
+        "uniform vec4 vColor;" +
+        "void main() {" +
+        "  gl_FragColor = vColor;" +
+        "}";
+
     private static final String TAG = "MyGLRenderer";
     private CarBody[] mCarBody = new CarBody[NUM_CARS];
     private CarWheels[] mCarWheels = new CarWheels[NUM_CARS];
@@ -42,9 +60,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // Car position
     public float carPos = 0;
     // Car speed
-    public volatile float carSpeed = 0.02f;
+    public volatile float carSpeed = 0.005f;
     // Constant to multiply speeds by in setSpeed()
-    public static final float speedScale = .0015f;
+    public static final double speedScale = 0.00025;
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -71,11 +89,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         
         // Create transformation matrices for each car
         for (int i = 0; i < NUM_CARS; i++) {
-            mCarXOffsets[i] = i % NUM_LANES;
+            mCarXOffsets[i] = (i % NUM_LANES) * 1.1f;
             mCarZOffsets[i] = (i / NUM_LANES) * -2;
         }
 
-        road = new Square(0.9f, 0.9f, 0.9f);
+        road = new Square(0.6f, 0.6f, 0.6f);
         
     }
 
@@ -104,28 +122,26 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
-            Matrix.translateM(temp, 0, mCarXOffsets[i], 0, mCarZOffsets[i]);
+            // Allow Z coordinates of [-2 * CARS_PER_LANE + 2, 2]
+            float timeOffset = ((mCarZOffsets[i] +
+                                 ((int) SystemClock.uptimeMillis()) * carSpeed) %
+                                (2 * CARS_PER_LANE)) -
+                (2 * CARS_PER_LANE - 2);
+            Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-            // Allow Z coordinates of [-2 * CARS_PER_LANE + 2, 2]
-            mCarZOffsets[i] = ((mCarZOffsets[i] + (2 * CARS_PER_LANE - 2) + carSpeed) %
-                               (2 * CARS_PER_LANE)) -
-                (2 * CARS_PER_LANE - 2);
             mCarWheels[i].draw(mMVPMatrix);
             mCarBody[i].draw(mMVPMatrix);
         }
 
+        // Draw the road
         Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, 0f, -0.2f, 0f);
-        //Matrix.rotateM(temp, 0, 20f, 0f, 0f, 1f);
-        //Matrix.scaleM(temp, 0, 3, 10, 1);
+        Matrix.scaleM(temp, 0, 5f, 1f, 30f);
         Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
+        Matrix.rotateM(mMMatrix, 0, 90f, -1f, 0f, 0f);
+        Matrix.translateM(mMMatrix, 0, 0.25f, 0f, -0.4f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
         road.draw(mMVPMatrix);
-        
-        // Create a rotation for the triangle
-        //long time = SystemClock.uptimeMillis() % 4000L;
-        //float angle = 0.090f * ((int) time);
 
     }
 

@@ -55,19 +55,19 @@ public class MainActivity extends Activity {
         
         switch (view.getId()) {
         case R.id.button_20:
-            mGLView.getRenderer().carSpeed = 20f * MyGLRenderer.speedScale;
+            mGLView.getRenderer().carSpeed = (float) (20f * MyGLRenderer.speedScale);
             // Update widgets
             speeding.setText(getString(R.string.speeding_20));
             killed.setText(getString(R.string.killed_20));
             break;
         case R.id.button_30:
-            mGLView.getRenderer().carSpeed = 30f * MyGLRenderer.speedScale;
+            mGLView.getRenderer().carSpeed = (float) (30f * MyGLRenderer.speedScale);
             // Update widgets
             speeding.setText(getString(R.string.speeding_30));
             killed.setText(getString(R.string.killed_30));
             break;
         case R.id.button_40:
-            mGLView.getRenderer().carSpeed = 40f * MyGLRenderer.speedScale;
+            mGLView.getRenderer().carSpeed = (float) (40f * MyGLRenderer.speedScale);
             // Update widgets
             speeding.setText(getString(R.string.speeding_40));
             killed.setText(getString(R.string.killed_40));
