@@ -122,11 +122,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
-            // Allow Z coordinates of [-2 * CARS_PER_LANE + 2, 2]
+            // Allow Z coordinates of [-2 * CARS_PER_LANE + 4, 4]
             float timeOffset = ((mCarZOffsets[i] +
                                  ((int) SystemClock.uptimeMillis()) * carSpeed) %
                                 (2 * CARS_PER_LANE)) -
-                (2 * CARS_PER_LANE - 2);
+                (2 * CARS_PER_LANE - 4);
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
@@ -160,7 +160,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
           Cannot be negative or 0, should not be close to 0
         */
         //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
-        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 1, 21);
+        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 0.5f, 21);
 
     }
 
