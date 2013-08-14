@@ -47,6 +47,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float[] mCarXOffsets = new float[NUM_CARS];
     private float[] mCarZOffsets = new float[NUM_CARS];
     private Square road;
+    private Square land, sky;
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjMatrix = new float[16];
@@ -94,6 +95,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
 
         road = new Square(0.6f, 0.6f, 0.6f);
+        land = new Square(0.1f, 0.6f, 0.1f);
+        sky = new Square(0.6f, 0.6f, 0.9f);
         
     }
 
@@ -112,9 +115,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Clear the model matrix
         Matrix.setIdentityM(mMMatrix, 0);
         Matrix.rotateM(mMMatrix, 0, 35, 0f, 1f, 0f);
-        Matrix.rotateM(mMMatrix, 0, 20, 1f, 0f, 0f);
+        Matrix.rotateM(mMMatrix, 0, 25, 1f, 0f, 0f);
+        /*
         Matrix.rotateM(mMMatrix, 0, mAngleY, 0f, 1f, 0f);
         Matrix.rotateM(mMMatrix, 0, mAngleX, 1f, 0f, 0f);
+        */
 
         // Apply the model matrix
         float[] cmMVPMatrix = mMVPMatrix.clone();
@@ -142,6 +147,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.translateM(mMMatrix, 0, 0.25f, 0f, -0.4f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
         road.draw(mMVPMatrix);
+        Matrix.translateM(mMMatrix, 0, 0f, 0f, -0.01f);
+        Matrix.scaleM(mMMatrix, 0, 10f, 10f, 10f);
+        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
+        land.draw(mMVPMatrix);
+        Matrix.setIdentityM(mMMatrix, 0);
+        Matrix.scaleM(mMMatrix, 0, 100f, 100f, 1f);
+        Matrix.translateM(mMMatrix, 0, 0f, 0f, -18f);
+        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
+        sky.draw(mMVPMatrix);
 
     }
 
