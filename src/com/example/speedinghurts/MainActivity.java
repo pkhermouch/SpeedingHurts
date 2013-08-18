@@ -90,7 +90,7 @@ class MyGLSurfaceView extends GLSurfaceView {
         setEGLConfigChooser(true);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new MyGLRenderer();
+        mRenderer = new MyGLRenderer(context);
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data
@@ -106,7 +106,7 @@ class MyGLSurfaceView extends GLSurfaceView {
         setEGLConfigChooser(true);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new MyGLRenderer();
+        mRenderer = new MyGLRenderer(context);
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data

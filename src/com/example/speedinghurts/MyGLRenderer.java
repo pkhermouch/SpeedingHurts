@@ -13,6 +13,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 import android.os.SystemClock;
+import android.content.Context;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float[] mCarZOffsets = new float[NUM_CARS];
     private Square road;
     private Square land, sky;
+    private Sprite background;
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjMatrix = new float[16];
@@ -65,6 +67,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // Constant to multiply speeds by in setSpeed()
     public static final double speedScale = 0.00025;
 
+    // Used to draw the texture
+    private final Context mActivityContext;
+    public MyGLRenderer(final Context activityContext) {
+        super();
+        mActivityContext = activityContext;
+    }
+    
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
@@ -97,6 +106,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         road = new Square(0.6f, 0.6f, 0.6f);
         land = new Square(0.1f, 0.6f, 0.1f);
         sky = new Square(0.6f, 0.6f, 0.9f);
+        background = new Sprite(mActivityContext);
         
     }
 
@@ -146,16 +156,23 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.rotateM(mMMatrix, 0, 90f, -1f, 0f, 0f);
         Matrix.translateM(mMMatrix, 0, 0.25f, 0f, -0.4f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        road.draw(mMVPMatrix);
+        //road.draw(mMVPMatrix);
+        
         Matrix.translateM(mMMatrix, 0, 0f, 0f, -0.01f);
         Matrix.scaleM(mMMatrix, 0, 10f, 10f, 10f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        land.draw(mMVPMatrix);
+        //land.draw(mMVPMatrix);
+        
         Matrix.setIdentityM(mMMatrix, 0);
         Matrix.scaleM(mMMatrix, 0, 100f, 100f, 1f);
         Matrix.translateM(mMMatrix, 0, 0f, 0f, -18f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        sky.draw(mMVPMatrix);
+        //sky.draw(mMVPMatrix);
+
+        Matrix.setIdentityM(mMMatrix, 0);
+        Matrix.scaleM(mMMatrix, 0, 10f, 10f, 1f);
+        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
+        background.draw(mMVPMatrix);
 
     }
 
