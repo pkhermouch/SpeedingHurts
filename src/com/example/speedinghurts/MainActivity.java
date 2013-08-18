@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import android.content.Intent;
+import android.content.res.Configuration;
 
 public class MainActivity extends Activity {
 
@@ -18,15 +19,8 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
             
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.main_portrait);
         mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
-
-        // Create a GLSurfaceView instance and set it
-        // as the ContentView for this Activity
-        /*
-        mGLView = new MyGLSurfaceView(this);
-        setContentView(mGLView);
-        */
 
     }
 
@@ -82,6 +76,19 @@ public class MainActivity extends Activity {
         // Start the new intent
         startActivity(intent);
 
+    }
+
+    // Change the layout when the user changes the orientation of the screen
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.main_landscape);
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setContentView(R.layout.main_portrait);
+        }
     }
 
 }

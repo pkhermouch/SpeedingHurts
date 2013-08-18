@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+  <TextView
+      android:id="@+id/percent_speeding"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content" 
+      android:text="@string/speeding_20" />
+  <TextView
+      android:id="@+id/percent_killed"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content" 
+      android:text="@string/killed_20" />
+  <LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <com.example.speedinghurts.MyGLSurfaceView
+        android:id="@+id/the_surface_view"
+        android:layout_width="1mm"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" >
+      <Button
+          android:id="@+id/button_20"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="20 MPH"
+          android:onClick="switchSpeed" />
+      <Button
+          android:id="@+id/button_30"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="30 MPH"
+          android:onClick="switchSpeed" />
+      <Button
+          android:id="@+id/button_40"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="40 MPH"
+          android:onClick="switchSpeed" />
+      <Button
+          android:id="@+id/button_graph"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:text="Show graph"
+          android:onClick="showGraph" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
