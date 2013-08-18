@@ -100,7 +100,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Create transformation matrices for each car
         for (int i = 0; i < NUM_CARS; i++) {
             mCarXOffsets[i] = (i % NUM_LANES) * 1.1f;
-            mCarZOffsets[i] = (i / NUM_LANES) * -2;
+            mCarZOffsets[i] = ((i / NUM_LANES) * -2) + ((i % NUM_LANES) * 1.3f);
         }
 
         road = new Square(0.6f, 0.6f, 0.6f);
