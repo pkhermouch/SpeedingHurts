@@ -58,7 +58,6 @@ public class Sprite {
 
     private final int shaderProgram;
     private final FloatBuffer vertexBuffer;
-    private final ShortBuffer drawListBuffer;
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
@@ -70,17 +69,18 @@ public class Sprite {
         -0.5f, 0.5f,   // top left
         -0.5f, -0.5f,   // bottom left
         0.5f, -0.5f,   // bottom right
+        -0.5f, 0.5f,   // top left
+        0.5f, -0.5f,   // bottom right
         0.5f,  0.5f  //top right
     };
 
-    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; //Order to draw vertices
     private final int vertexStride = COORDS_PER_VERTEX * 4; //Bytes per vertex
 
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
     // Image to draw as a texture
-    final int textureID = R.raw.sword64;
+    final int textureID = R.raw.sky512;
 
     public Sprite(final Context activityContext) {
         mActivityContext = activityContext;
@@ -110,18 +110,24 @@ public class Sprite {
                   0.0f, 1.0f,
                   1.0f, 1.0f,
                   1.0f, 0.0f*/
-
+                /*
                 -0.5f,  0.5f,
                 -0.5f, -0.5f,
                 0.5f, -0.5f,
                 0.5f,  0.5f
-
+                */
                 /*
                 0.5f, 0.5f,
                 0.5f, -0.5f,
                 -0.5f, -0.5f,
                 -0.5f, 0.5f
                 */
+                -0.5f, 0.5f,   // top left
+                -0.5f, -0.5f,   // bottom left
+                0.5f, -0.5f,   // bottom right
+                -0.5f, 0.5f,   // top left
+                0.5f, -0.5f,   // bottom right
+                0.5f,  0.5f  //top right
             };
 
         mCubeTextureCoordinates = ByteBuffer
@@ -129,13 +135,6 @@ public class Sprite {
             .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mCubeTextureCoordinates.put(cubeTextureCoordinateData).position(0);
         
-        //Initialize byte buffer for the draw list
-        ByteBuffer dlb = ByteBuffer.allocateDirect(spriteCoords.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(drawOrder);
-        drawListBuffer.position(0);
-
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                                                    vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
@@ -165,7 +164,12 @@ public class Sprite {
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         //Prepare the triangle coordinate data
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
+        GLES20.glVertexAttribPointer(mPositionHandle,
+                                     COORDS_PER_VERTEX,
+                                     GLES20.GL_FLOAT,
+                                     false,
+                                     vertexStride,
+                                     vertexBuffer);
 
         //Get Handle to Fragment Shader's v_Color member
         mColorHandle = GLES20.glGetUniformLocation(shaderProgram, "v_Color");
@@ -174,8 +178,10 @@ public class Sprite {
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
         //Set Texture Handles and bind Texture
-        mTextureUniformHandle = GLES20.glGetAttribLocation(shaderProgram, "u_Texture");
-        mTextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram, "a_TexCoordinate");
+        mTextureUniformHandle = GLES20
+            .glGetAttribLocation(shaderProgram, "u_Texture");
+        mTextureCoordinateHandle = GLES20
+            .glGetAttribLocation(shaderProgram, "a_TexCoordinate");
 
         //Set the active texture unit to texture unit 0.
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -188,17 +194,23 @@ public class Sprite {
 
         //Pass in the texture coordinate information
         mCubeTextureCoordinates.position(0);
-        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, mTextureCoordinateDataSize, GLES20.GL_FLOAT, false, 0, mCubeTextureCoordinates);
+        GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
+                                     mTextureCoordinateDataSize,
+                                     GLES20.GL_FLOAT,
+                                     false,
+                                     0,
+                                     mCubeTextureCoordinates);
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
 
         //Get Handle to Shape's Transformation Matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(shaderProgram, "uMVPMatrix");
+        mMVPMatrixHandle = GLES20
+            .glGetUniformLocation(shaderProgram, "uMVPMatrix");
 
         //Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         //Draw the triangle
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, spriteCoords.length);
 
         //Disable Vertex Array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
