@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+import android.content.Intent;
 
 public class MainActivity extends Activity {
 
@@ -73,6 +74,14 @@ public class MainActivity extends Activity {
             killed.setText(getString(R.string.killed_40));
             break;
         }
+    }
+
+    public void showGraph(View view) {
+
+        Intent intent = new Intent(this, DataGraphActivity.class);
+        // Start the new intent
+        startActivity(intent);
+
     }
 
 }

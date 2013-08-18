@@ -45,4 +45,10 @@
         android:text="40 MPH"
         android:onClick="switchSpeed" />
   </LinearLayout>
+  <Button
+      android:id="@+id/button_graph"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Show graph"
+      android:onClick="showGraph" />
 </LinearLayout>

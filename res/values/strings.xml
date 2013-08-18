@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Speeding Hurts</string>
+    <string name="data_graph_activity_label">Statistics</string>
     <string name="speeding_20">On Grand Concourse, 99% of drivers were going 20 MPH or faster</string>
     <string name="speeding_30">On Grand Concourse, 49% of drivers were going 30 MPH or faster</string>
     <string name="speeding_40">On Grand Concourse, 5% of drivers were going 40 MPH or faster</string>
