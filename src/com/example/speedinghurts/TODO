@@ -5,6 +5,7 @@
 [*]Add user interface to change car speed
 [*]Draw road
 [ ]Fix redraw issue when switching speeds
+[ ]Make different lanes of traffic offset in the Z direction a bit, to look more natural
 [ ]Draw background by adding Google Streetview image as a texture
 [ ]Display data graphically in a separate activity
 [*]Decide on traffic perspective and turn off user input
