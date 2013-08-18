@@ -8,7 +8,7 @@
 [*]Make different lanes of traffic offset in the Z direction a bit, to look more natural
 [*]Create different layouts for portrait and landscape orientations
 [ ]Draw background by adding Google Streetview image as a texture
-[ ]Display data graphically in a separate activity
+[*]Display data graphically in a separate activity
 [*]Decide on traffic perspective and turn off user input
 [ ]Clean up / speed up code
 [*]Implement "stream of traffic" effect
