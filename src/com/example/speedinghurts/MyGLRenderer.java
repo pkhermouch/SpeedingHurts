@@ -66,6 +66,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public volatile float carSpeed = 0.005f;
     // Constant to multiply speeds by in setSpeed()
     public static final double speedScale = 0.00025;
+    // Variable for transitioning between different speeds smoothly
+    // Old Z offset
+    private float oldOffset = 0f;
+    // Old SystemClock.uptimeMillis()
+    private int oldTime = 0;
 
     // Used to draw the texture
     private final Context mActivityContext;
@@ -138,8 +143,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
             // Allow Z coordinates of [-2 * CARS_PER_LANE + 4, 4]
-            float timeOffset = ((mCarZOffsets[i] +
-                                 ((int) SystemClock.uptimeMillis()) * carSpeed) %
+            int newTime = (int) SystemClock.uptimeMillis();
+            oldOffset += (newTime - oldTime) * carSpeed;
+            oldTime = newTime;
+            float timeOffset = ((mCarZOffsets[i] + oldOffset) %
                                 (2 * CARS_PER_LANE)) -
                 (2 * CARS_PER_LANE - 4);
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
