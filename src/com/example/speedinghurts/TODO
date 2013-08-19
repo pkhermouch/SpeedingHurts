@@ -4,7 +4,8 @@
 [*]Cars have different colors
 [*]Add user interface to change car speed
 [*]Draw road
-[ ]Fix redraw issue when switching speeds
+[*]Fix redraw issue when switching speeds
+[ ]Figure out why switching orientations makes the buttons no longer change the carSpeed
 [*]Make different lanes of traffic offset in the Z direction a bit, to look more natural
 [*]Create different layouts for portrait and landscape orientations
 [*]Draw background by adding Google Streetview image as a texture

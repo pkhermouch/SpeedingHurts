@@ -149,19 +149,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
+            
             // Allow Z coordinates of [-2 * CARS_PER_LANE + 4, 4]
             int newTime = (int) SystemClock.uptimeMillis();
-            /*
             oldOffset += (newTime - oldTime) * carSpeed;
             oldTime = newTime;
             float timeOffset = ((mCarZOffsets[i] + oldOffset) %
                                 (2 * CARS_PER_LANE)) -
                 (2 * CARS_PER_LANE - 4);
-            */
-            float timeOffset = ((mCarZOffsets[i] + newTime * carSpeed) %
-                                (2 * CARS_PER_LANE)) -
-                (2 * CARS_PER_LANE - 4);
-            
+
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
