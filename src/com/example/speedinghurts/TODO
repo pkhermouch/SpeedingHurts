@@ -4,13 +4,15 @@
 [*]Cars have different colors
 [*]Add user interface to change car speed
 [*]Draw road
-[*]Fix redraw issue when switching speeds
+[ ]Fix redraw issue when switching speeds
 [*]Make different lanes of traffic offset in the Z direction a bit, to look more natural
 [*]Create different layouts for portrait and landscape orientations
-[ ]Draw background by adding Google Streetview image as a texture
+[*]Draw background by adding Google Streetview image as a texture
+[ ]Fix cars so they fit in with the texture
+[ ]Resize texture when screen dimensions change
 [*]Display data graphically in a separate activity
 [*]Decide on traffic perspective and turn off user input
 [ ]Clean up / speed up code
 [*]Implement "stream of traffic" effect
 [ ]Add lighting?
-[ ]Wheels should rotate as car moves?
+[X]Wheels should rotate as car moves?

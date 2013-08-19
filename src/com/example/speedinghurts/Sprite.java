@@ -64,14 +64,18 @@ public class Sprite {
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 2;
+    // Ratio between width and height of the image
+    private final float imageRatio = 1280f / 557;
 
-    static float spriteCoords[] = {
-        -0.5f, 0.5f,   // top left
-        -0.5f, -0.5f,   // bottom left
-        0.5f, -0.5f,   // bottom right
-        -0.5f, 0.5f,   // top left
-        0.5f, -0.5f,   // bottom right
-        0.5f,  0.5f  //top right
+    private float spriteCoords[] = {
+
+        -imageRatio, 1f,   // top left
+        -imageRatio, -1f,   // bottom left
+        imageRatio, -1f,   // bottom right
+        -imageRatio, 1f,   // top left
+        imageRatio, -1f,   // bottom right
+        imageRatio,  1f  //top right
+
     };
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; //Bytes per vertex
@@ -80,7 +84,7 @@ public class Sprite {
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
     // Image to draw as a texture
-    final int textureID = R.raw.sky512;
+    final int textureID = R.raw.streetview;
 
     public Sprite(final Context activityContext) {
         mActivityContext = activityContext;
@@ -122,12 +126,22 @@ public class Sprite {
                 -0.5f, -0.5f,
                 -0.5f, 0.5f
                 */
+                /*
                 -0.5f, 0.5f,   // top left
                 -0.5f, -0.5f,   // bottom left
                 0.5f, -0.5f,   // bottom right
                 -0.5f, 0.5f,   // top left
                 0.5f, -0.5f,   // bottom right
                 0.5f,  0.5f  //top right
+                */
+
+                imageRatio, 1f,   // top left
+                imageRatio, -1f,   // bottom left
+                -imageRatio, -1f,   // bottom right
+                imageRatio, 1f,   // top left
+                -imageRatio, -1f,   // bottom right
+                -imageRatio,  1f  //top right
+
             };
 
         mCubeTextureCoordinates = ByteBuffer

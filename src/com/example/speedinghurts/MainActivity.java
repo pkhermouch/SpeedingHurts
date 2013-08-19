@@ -89,6 +89,13 @@ public class MainActivity extends Activity {
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.main_portrait);
         }
+
+        /*
+        TextView speeding = (TextView) findViewById(R.id.percent_speeding);
+        speeding.setText("width " + mGLView.getRenderer().mWidth +
+                         " height " + mGLView.getRenderer().mHeight);
+        */
+
     }
 
 }

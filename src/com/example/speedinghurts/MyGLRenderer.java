@@ -71,6 +71,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float oldOffset = 0f;
     // Old SystemClock.uptimeMillis()
     private int oldTime = 0;
+    /*
+    // Dimensions of the SurfaceView
+    public volatile int mWidth, mHeight;
+    // Scale constants to make sure the image takes up the whole space
+    private final float SCALE_SCREEN_HEIGHT = 0.321969697f;
+    private final float SCALE_SCREEN_WIDTH = 0.4375f;
+    */
 
     // Used to draw the texture
     private final Context mActivityContext;
@@ -144,11 +151,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             Matrix.setIdentityM(temp, 0);
             // Allow Z coordinates of [-2 * CARS_PER_LANE + 4, 4]
             int newTime = (int) SystemClock.uptimeMillis();
+            /*
             oldOffset += (newTime - oldTime) * carSpeed;
             oldTime = newTime;
             float timeOffset = ((mCarZOffsets[i] + oldOffset) %
                                 (2 * CARS_PER_LANE)) -
                 (2 * CARS_PER_LANE - 4);
+            */
+            float timeOffset = ((mCarZOffsets[i] + newTime * carSpeed) %
+                                (2 * CARS_PER_LANE)) -
+                (2 * CARS_PER_LANE - 4);
+            
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
             Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
@@ -177,7 +190,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //sky.draw(mMVPMatrix);
 
         Matrix.setIdentityM(mMMatrix, 0);
-        Matrix.scaleM(mMMatrix, 0, 10f, 10f, 1f);
+        Matrix.scaleM(mMMatrix, 0, 140f, 85f, 1f);
+        //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_SCALE * SCALE_HEIGHT_WIDTH, mHeight * SCALE_SCREEN_SCALE, 1f);
+        //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_WIDTH, mHeight * SCALE_SCREEN_HEIGHT, 1f);
+        Matrix.translateM(mMMatrix, 0, -0.5f, 0.5f, -18f);
+        Matrix.rotateM(mMMatrix, 0, 180f, 0f, 0f, 1f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
         background.draw(mMVPMatrix);
 
@@ -190,6 +207,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height);
 
         float ratio = (float) width / height;
+        /*
+        mWidth = width;
+        mHeight = height;
+        */
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
