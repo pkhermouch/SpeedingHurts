@@ -85,9 +85,11 @@ public class MainActivity extends Activity {
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setContentView(R.layout.main_landscape);
+            mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.main_portrait);
+            mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
         }
 
         /*
