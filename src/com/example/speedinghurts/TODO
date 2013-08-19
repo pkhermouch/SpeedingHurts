@@ -11,6 +11,7 @@
 [*]Draw background by adding Google Streetview image as a texture
 [*]Fix cars so they fit in with the texture
 [ ]Resize texture when screen dimensions change
+[ ]Port project to a newer API version and test it on other phones
 [*]Display data graphically in a separate activity
 [*]Decide on traffic perspective and turn off user input
 [ ]Clean up / speed up code
