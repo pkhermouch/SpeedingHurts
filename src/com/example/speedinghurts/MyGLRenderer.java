@@ -23,6 +23,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final int NUM_LANES = 3;
     // Try to make sure this doesn't truncate a decimal ever
     private final int CARS_PER_LANE = NUM_CARS / NUM_LANES;
+    private final float SPACE_BETWEEN_LANES = 1.7f;
+    private final float SPACE_BETWEEN_CARS = 3f;
+    // Z Offset between lanes of traffic so it looks more natural
+    private final float CAR_OFFSET = 2f;
 
     public static final String vertexShaderCode =
         // This matrix member variable provides a hook to manipulate
@@ -111,8 +115,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         
         // Create transformation matrices for each car
         for (int i = 0; i < NUM_CARS; i++) {
-            mCarXOffsets[i] = (i % NUM_LANES) * 1.1f;
-            mCarZOffsets[i] = ((i / NUM_LANES) * -2) + ((i % NUM_LANES) * 1.3f);
+            mCarXOffsets[i] = (i % NUM_LANES) * SPACE_BETWEEN_LANES;
+            mCarZOffsets[i] = ((i / NUM_LANES) * SPACE_BETWEEN_CARS) +
+                ((i % NUM_LANES) * CAR_OFFSET);
         }
 
         road = new Square(0.6f, 0.6f, 0.6f);
@@ -136,8 +141,19 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Clear the model matrix
         Matrix.setIdentityM(mMMatrix, 0);
-        Matrix.rotateM(mMMatrix, 0, 35, 0f, 1f, 0f);
-        Matrix.rotateM(mMMatrix, 0, 25, 1f, 0f, 0f);
+        // Make the cars a bit bigger
+        Matrix.scaleM(mMMatrix, 0, 2.4f, 3f, 1f);
+        // Orient the plane so that it matches up with the texture
+        // Mainly pay attention to making the vanishing points match up, then
+        // rotate about the Z axis if necessary
+        Matrix.rotateM(mMMatrix, 0, 33, 0f, 1f, 0f);
+        Matrix.rotateM(mMMatrix, 0, 18, 1f, 0f, 0f);
+        Matrix.rotateM(mMMatrix, 0, 4, 0f, 0f, 1f);
+        // Make the cars even bigger
+        Matrix.scaleM(mMMatrix, 0, 2.5f, 2.5f, 2f);
+        // Move them away from the viewer
+        Matrix.translateM(mMMatrix, 0, 0.5f, -0.7f, 0f);
+        
         /*
         Matrix.rotateM(mMMatrix, 0, mAngleY, 0f, 1f, 0f);
         Matrix.rotateM(mMMatrix, 0, mAngleX, 1f, 0f, 0f);
@@ -150,13 +166,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
             
-            // Allow Z coordinates of [-2 * CARS_PER_LANE + 4, 4]
+            // Allow Z coordinates of [val * CARS_PER_LANE + 2, 2]
+            // Value of val found through experimentation
             int newTime = (int) SystemClock.uptimeMillis();
             oldOffset += (newTime - oldTime) * carSpeed;
             oldTime = newTime;
             float timeOffset = ((mCarZOffsets[i] + oldOffset) %
-                                (2 * CARS_PER_LANE)) -
-                (2 * CARS_PER_LANE - 4);
+                                (3f * CARS_PER_LANE)) -
+                (3f * CARS_PER_LANE - 2);
 
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
             Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
@@ -186,10 +203,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //sky.draw(mMVPMatrix);
 
         Matrix.setIdentityM(mMMatrix, 0);
-        Matrix.scaleM(mMMatrix, 0, 140f, 85f, 1f);
+        Matrix.scaleM(mMMatrix, 0, 280f, 170f, 1f);
         //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_SCALE * SCALE_HEIGHT_WIDTH, mHeight * SCALE_SCREEN_SCALE, 1f);
         //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_WIDTH, mHeight * SCALE_SCREEN_HEIGHT, 1f);
-        Matrix.translateM(mMMatrix, 0, -0.5f, 0.5f, -18f);
+        Matrix.translateM(mMMatrix, 0, -0.5f, 0.5f, -37f);
         Matrix.rotateM(mMMatrix, 0, 180f, 0f, 0f, 1f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
         background.draw(mMVPMatrix);
@@ -215,7 +232,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
           Cannot be negative or 0, should not be close to 0
         */
         //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
-        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 0.5f, 21);
+        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 0.5f, 40);
 
     }
 
