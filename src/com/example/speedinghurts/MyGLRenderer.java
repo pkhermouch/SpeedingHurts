@@ -51,8 +51,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // X and Z offsets, to implement the "stream of traffic" effect
     private float[] mCarXOffsets = new float[NUM_CARS];
     private float[] mCarZOffsets = new float[NUM_CARS];
-    private Square road;
-    private Square land, sky;
     private Sprite background;
 
     private final float[] mMVPMatrix = new float[16];
@@ -61,9 +59,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mMMatrix = new float[16];
     private float[] temp = new float[16];
 
-    // Declare as volatile because we are updating it from another thread
-    public volatile float mAngleY = 0;
-    public volatile float mAngleX = 0;
     // Car position
     public float carPos = 0;
     // Car speed
@@ -75,13 +70,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float oldOffset = 0f;
     // Old SystemClock.uptimeMillis()
     private int oldTime = 0;
-    /*
-    // Dimensions of the SurfaceView
-    public volatile int mWidth, mHeight;
-    // Scale constants to make sure the image takes up the whole space
-    private final float SCALE_SCREEN_HEIGHT = 0.321969697f;
-    private final float SCALE_SCREEN_WIDTH = 0.4375f;
-    */
 
     // Used to draw the texture
     private final Context mActivityContext;
@@ -120,9 +108,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 ((i % NUM_LANES) * CAR_OFFSET);
         }
 
-        road = new Square(0.6f, 0.6f, 0.6f);
-        land = new Square(0.1f, 0.6f, 0.1f);
-        sky = new Square(0.6f, 0.6f, 0.9f);
         background = new Sprite(mActivityContext);
         
     }
@@ -154,11 +139,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Move them away from the viewer
         Matrix.translateM(mMMatrix, 0, 0.5f, -0.7f, 0f);
         
-        /*
-        Matrix.rotateM(mMMatrix, 0, mAngleY, 0f, 1f, 0f);
-        Matrix.rotateM(mMMatrix, 0, mAngleX, 1f, 0f, 0f);
-        */
-
         // Apply the model matrix
         float[] cmMVPMatrix = mMVPMatrix.clone();
         float[] cmMMatrix = mMMatrix.clone();
@@ -182,30 +162,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             mCarBody[i].draw(mMVPMatrix);
         }
 
-        // Draw the road
-        Matrix.setIdentityM(temp, 0);
-        Matrix.scaleM(temp, 0, 5f, 1f, 30f);
-        Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
-        Matrix.rotateM(mMMatrix, 0, 90f, -1f, 0f, 0f);
-        Matrix.translateM(mMMatrix, 0, 0.25f, 0f, -0.4f);
-        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        //road.draw(mMVPMatrix);
-        
-        Matrix.translateM(mMMatrix, 0, 0f, 0f, -0.01f);
-        Matrix.scaleM(mMMatrix, 0, 10f, 10f, 10f);
-        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        //land.draw(mMVPMatrix);
-        
-        Matrix.setIdentityM(mMMatrix, 0);
-        Matrix.scaleM(mMMatrix, 0, 100f, 100f, 1f);
-        Matrix.translateM(mMMatrix, 0, 0f, 0f, -18f);
-        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        //sky.draw(mMVPMatrix);
-
+        // Draw the background
         Matrix.setIdentityM(mMMatrix, 0);
         Matrix.scaleM(mMMatrix, 0, 280f, 170f, 1f);
-        //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_SCALE * SCALE_HEIGHT_WIDTH, mHeight * SCALE_SCREEN_SCALE, 1f);
-        //Matrix.scaleM(mMMatrix, 0, mWidth * SCALE_SCREEN_WIDTH, mHeight * SCALE_SCREEN_HEIGHT, 1f);
         Matrix.translateM(mMMatrix, 0, -0.5f, 0.5f, -37f);
         Matrix.rotateM(mMMatrix, 0, 180f, 0f, 0f, 1f);
         Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
@@ -220,18 +179,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height);
 
         float ratio = (float) width / height;
-        /*
-        mWidth = width;
-        mHeight = height;
-        */
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        /*
-          Near / far clipping planes, in terms of units away from the camera
-          Cannot be negative or 0, should not be close to 0
-        */
-        //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        // The last two parameters determine how close and far objects can be
+        // from the viewer and still be drawn, respectively. These values must
+        // be greater than 0, and the near value should not be close to 0
         Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 0.5f, 40);
 
     }

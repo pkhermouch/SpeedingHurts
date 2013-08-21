@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
             killed.setText(getString(R.string.killed_40));
             break;
         }
+
     }
 
     public void showGraph(View view) {
@@ -91,12 +92,6 @@ public class MainActivity extends Activity {
             setContentView(R.layout.main_portrait);
             mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
         }
-
-        /*
-        TextView speeding = (TextView) findViewById(R.id.percent_speeding);
-        speeding.setText("width " + mGLView.getRenderer().mWidth +
-                         " height " + mGLView.getRenderer().mHeight);
-        */
 
     }
 
@@ -137,38 +132,6 @@ class MyGLSurfaceView extends GLSurfaceView {
         // Render the view only when there is a change in the drawing data
         //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
-
-    /*
-    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
-    private float mPreviousX;
-    private float mPreviousY;
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        // MotionEvent reports input details from the touch screen
-        // and other input controls. In this case, you are only
-        // interested in events where the touch position changed.
-
-        float x = e.getX();
-        float y = e.getY();
-
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-
-                float dx = x - mPreviousX;
-                float dy = y - mPreviousY;
-
-                mRenderer.mAngleY += dx * TOUCH_SCALE_FACTOR;
-                mRenderer.mAngleX += dy * TOUCH_SCALE_FACTOR;
-
-                requestRender();
-        }
-
-        mPreviousX = x;
-        mPreviousY = y;
-        return true;
-    }
-    */
 
     public MyGLRenderer getRenderer() {
 

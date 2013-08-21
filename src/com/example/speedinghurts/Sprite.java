@@ -107,33 +107,6 @@ public class Sprite {
         // What's more is that the texture coordinates are the same for every face.
         final float[] cubeTextureCoordinateData =
             {
-                //Front face
-                /*0.0f, 0.0f,
-                  0.0f, 1.0f,
-                  1.0f, 0.0f,
-                  0.0f, 1.0f,
-                  1.0f, 1.0f,
-                  1.0f, 0.0f*/
-                /*
-                -0.5f,  0.5f,
-                -0.5f, -0.5f,
-                0.5f, -0.5f,
-                0.5f,  0.5f
-                */
-                /*
-                0.5f, 0.5f,
-                0.5f, -0.5f,
-                -0.5f, -0.5f,
-                -0.5f, 0.5f
-                */
-                /*
-                -0.5f, 0.5f,   // top left
-                -0.5f, -0.5f,   // bottom left
-                0.5f, -0.5f,   // bottom right
-                -0.5f, 0.5f,   // top left
-                0.5f, -0.5f,   // bottom right
-                0.5f,  0.5f  //top right
-                */
 
                 imageRatio, 1f,   // top left
                 imageRatio, -1f,   // bottom left
@@ -256,12 +229,6 @@ public class Sprite {
                 GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,
                                        GLES20.GL_TEXTURE_MAG_FILTER,
                                        GLES20.GL_NEAREST);
-                /*
-                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
-                                       GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
-                                       GLES20.GL_CLAMP_TO_EDGE);
-                */
                 
                 // Load the bitmap into the bound texture.
                 GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
