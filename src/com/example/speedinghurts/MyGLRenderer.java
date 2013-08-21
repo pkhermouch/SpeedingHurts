@@ -15,8 +15,6 @@ import android.util.Log;
 import android.os.SystemClock;
 import android.content.Context;
 
-import java.util.ArrayList;
-
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private final int NUM_CARS = 21;
@@ -58,9 +56,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mVMatrix = new float[16];
     private final float[] mMMatrix = new float[16];
     private float[] temp = new float[16];
+    // The transformation that will be applied to all cars
+    private float[] carTransformation = new float[16];
+    // The transformation that will be applied to the texture
+    private float[] textureTransformation = new float[16];
 
-    // Car position
-    public float carPos = 0;
     // Car speed
     public volatile float carSpeed = 0.005f;
     // Constant to multiply speeds by in setSpeed()
@@ -87,7 +87,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Do backface culling
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glFrontFace(GLES20.GL_CCW);
-        // Why using GL_BACK won't work is a mystery
         GLES20.glCullFace(GLES20.GL_BACK);
         // Enable depth buffer
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -98,7 +97,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             mCarBody[i] = new CarBody((float) Math.random(),
                                       (float) Math.random(),
                                       (float) Math.random());
-            mCarWheels[i] = new CarWheels();
+            // Don't create or draw the wheels, since no one can see them anyway
+            //mCarWheels[i] = new CarWheels();
         }
         
         // Create transformation matrices for each car
@@ -109,6 +109,28 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
 
         background = new Sprite(mActivityContext);
+
+        // Set the transformation matrix to be applied to all cars
+        // Clear the model matrix
+        Matrix.setIdentityM(carTransformation, 0);
+        // Make the cars a bit bigger
+        Matrix.scaleM(carTransformation, 0, 2.4f, 3f, 1f);
+        // Orient the plane so that it matches up with the texture
+        // Mainly pay attention to making the vanishing points match up, then
+        // rotate about the Z axis if necessary
+        Matrix.rotateM(carTransformation, 0, 33, 0f, 1f, 0f);
+        Matrix.rotateM(carTransformation, 0, 18, 1f, 0f, 0f);
+        Matrix.rotateM(carTransformation, 0, 4, 0f, 0f, 1f);
+        // Make the cars even bigger
+        Matrix.scaleM(carTransformation, 0, 2.5f, 2.5f, 2f);
+        // Move them away from the viewer
+        Matrix.translateM(carTransformation, 0, 0.5f, -0.7f, 0f);
+
+        // Set the tranformation matrix to be applied to the texture
+        Matrix.setIdentityM(textureTransformation, 0);
+        Matrix.scaleM(textureTransformation, 0, 280f, 170f, 1f);
+        Matrix.translateM(textureTransformation, 0, -0.5f, 0.5f, -37f);
+        Matrix.rotateM(textureTransformation, 0, 180f, 0f, 0f, 1f);
 
     }
 
@@ -124,25 +146,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 
-        // Clear the model matrix
-        Matrix.setIdentityM(mMMatrix, 0);
-        // Make the cars a bit bigger
-        Matrix.scaleM(mMMatrix, 0, 2.4f, 3f, 1f);
-        // Orient the plane so that it matches up with the texture
-        // Mainly pay attention to making the vanishing points match up, then
-        // rotate about the Z axis if necessary
-        Matrix.rotateM(mMMatrix, 0, 33, 0f, 1f, 0f);
-        Matrix.rotateM(mMMatrix, 0, 18, 1f, 0f, 0f);
-        Matrix.rotateM(mMMatrix, 0, 4, 0f, 0f, 1f);
-        // Make the cars even bigger
-        Matrix.scaleM(mMMatrix, 0, 2.5f, 2.5f, 2f);
-        // Move them away from the viewer
-        Matrix.translateM(mMMatrix, 0, 0.5f, -0.7f, 0f);
-        
-        // Apply the model matrix
-        float[] cmMVPMatrix = mMVPMatrix.clone();
-        float[] cmMMatrix = mMMatrix.clone();
-
+        // Apply the model matrix to each car
         for (int i = 0; i < NUM_CARS; i++) {
             Matrix.setIdentityM(temp, 0);
             
@@ -156,19 +160,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 (3f * CARS_PER_LANE - 2);
 
             Matrix.translateM(temp, 0, mCarXOffsets[i], 0, timeOffset);
-            Matrix.multiplyMM(mMMatrix, 0, cmMMatrix, 0, temp, 0);
-            Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-            mCarWheels[i].draw(mMVPMatrix);
-            mCarBody[i].draw(mMVPMatrix);
+            Matrix.multiplyMM(mMMatrix, 0, carTransformation, 0, temp, 0);
+            Matrix.multiplyMM(temp, 0, mMVPMatrix, 0, mMMatrix, 0);
+            //mCarWheels[i].draw(temp);
+            mCarBody[i].draw(temp);
         }
 
         // Draw the background
-        Matrix.setIdentityM(mMMatrix, 0);
-        Matrix.scaleM(mMMatrix, 0, 280f, 170f, 1f);
-        Matrix.translateM(mMMatrix, 0, -0.5f, 0.5f, -37f);
-        Matrix.rotateM(mMMatrix, 0, 180f, 0f, 0f, 1f);
-        Matrix.multiplyMM(mMVPMatrix, 0, cmMVPMatrix, 0, mMMatrix, 0);
-        background.draw(mMVPMatrix);
+        Matrix.multiplyMM(temp, 0, mMVPMatrix, 0, textureTransformation, 0);
+        background.draw(temp);
 
     }
 

@@ -15,7 +15,7 @@
 [*]Display data graphically in a separate activity
 [*]Decide on traffic perspective and turn off user input
 [*]Clean up code
-[ ]Optimize onSurfaceCreated and drawFrame
+[*]Optimize onSurfaceCreated and drawFrame
 [*]Implement "stream of traffic" effect
 [X]Add lighting?
 [X]Wheels should rotate as car moves?
