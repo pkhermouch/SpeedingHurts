@@ -109,7 +109,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
 
         background = new Sprite(mActivityContext);
-        
+
     }
 
     @Override

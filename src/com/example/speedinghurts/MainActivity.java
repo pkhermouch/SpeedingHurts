@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         // If your OpenGL application is memory intensive,
         // you should consider de-allocating objects that
         // consume significant memory here.
-        mGLView.onPause();
+        //mGLView.onPause();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
-        mGLView.onResume();
+        //mGLView.onResume();
     }
 
     public void switchSpeed(View view) {
@@ -86,12 +86,12 @@ public class MainActivity extends Activity {
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setContentView(R.layout.main_landscape);
-            mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.main_portrait);
-            mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
         }
+
+        mGLView = (MyGLSurfaceView) findViewById(R.id.the_surface_view);
 
     }
 
